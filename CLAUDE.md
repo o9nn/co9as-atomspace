@@ -199,14 +199,129 @@ ValuePtr v = atom->getValue(key);
 ValuePtr result = link->execute(atomspace);
 ```
 
-## ATen Integration (NEW)
+## ATen Integration & Tensor Logic
 
-The `opencog/atoms/aten/` directory provides integration with PyTorch's ATen tensor library:
+The `opencog/atoms/aten/` directory provides comprehensive tensor integration based on
+[o9nn/ATen](https://github.com/o9nn/ATen) and [o9nn/ATenSpace](https://github.com/o9nn/ATenSpace).
 
-- **ATenValue**: Value type wrapping ATen tensors
-- **TensorNode**: Node representing a tensor
-- **TensorLink**: Links for tensor operations (add, matmul, etc.)
-- **ATenSpace**: Specialized space for tensor management
+This creates a **hybrid symbolic-neural AI architecture** that bridges:
+- Symbolic knowledge representation (AtomSpace hypergraph)
+- Neural tensor embeddings (ATen tensor operations)
+
+### Core Components
+
+#### ATenValue (`ATenValue.h/.cc`)
+Value type wrapping ATen tensors with fallback implementation:
+```cpp
+// Create tensors
+ATenValuePtr tensor = createATenFromVector({1.0, 2.0, 3.0}, {3});
+ATenValuePtr zeros = createATenZeros({128});
+ATenValuePtr random = createATenRandom({64, 64});
+
+// Tensor operations
+ValuePtr result = a->add(*b);
+ValuePtr product = a->matmul(*b);
+ValuePtr activated = tensor->relu();
+```
+
+#### ATenSpace (`ATenSpace.h/.cc`)
+Bridge between symbolic AI and neural embeddings:
+```cpp
+ATenSpace space(atomspace, 128); // 128-dim embeddings
+
+// Create concept with embedding
+Handle cat = space.create_concept_node("cat", random_embedding);
+
+// Query similar atoms
+HandleSeq similar = space.query_similar(cat, 10);
+
+// Compute similarity
+double sim = space.similarity(cat, dog);
+```
+
+#### TensorLogic (`TensorLogic.h/.cc`)
+Multi-entity & multi-scale network-aware operations:
+
+- **EntityEmbedding**: Maps atoms to dense vectors
+- **MultiScaleTensor**: Hierarchical tensor representations
+- **NetworkAwareTensor**: Graph-aware message passing
+- **TruthValueTensor**: PLN integration with tensors
+
+```cpp
+TensorLogic logic(atomspace, 128, 3); // 128-dim, 3 scales
+
+// Entity embeddings
+logic.set_embedding(atom, tensor);
+auto emb = logic.get_embedding(atom);
+
+// Similarity search
+HandleSeq similar = logic.query_similar(query, 10);
+
+// Network operations
+logic.build_network_tensor();
+logic.message_passing(2); // 2 hops
+logic.hebbian_update(0.01);
+```
+
+#### TensorLink (`TensorLink.h/.cc`)
+Executable links for tensor operations:
+- `TensorAddLink`, `TensorSubLink`, `TensorMulLink`, `TensorDivLink`
+- `TensorMatmulLink`, `TensorTransposeLink`, `TensorReshapeLink`
+- `TensorReluLink`, `TensorSigmoidLink`, `TensorTanhLink`, `TensorSoftmaxLink`
+- `TensorSumLink`, `TensorMeanLink`
+- `TensorOfLink`, `SetTensorLink`
+
+#### HebbianLink
+ECAN-style Hebbian learning connections:
+```cpp
+Handle hebb = space.create_hebbian_link(source, target, 1.0);
+space.hebbian_update(0.01); // Learning rate
+space.spread_activation(source, 10.0, 2); // Spread activation 2 hops
+```
+
+### Building with ATen
+
+The module auto-detects PyTorch or o9nn/ATen:
+```bash
+# With PyTorch
+cmake -DCMAKE_PREFIX_PATH=/path/to/libtorch ..
+
+# Or falls back to CPU-only implementation
+cmake ..
+```
+
+### Key Patterns
+
+#### Creating Tensor-Enhanced Atoms
+```cpp
+ATenSpace space(atomspace, 128);
+
+// Create concept with embedding
+Handle concept = space.create_concept_node("entity", embedding);
+
+// Create link with aggregated embedding
+Handle link = space.create_link(INHERITANCE_LINK, {child, parent}, "mean");
+```
+
+#### Semantic Similarity Search
+```cpp
+// Find similar atoms
+HandleSeq similar = space.query_similar(query_atom, k);
+
+// Pattern match using embeddings
+HandleSeq matches = space.pattern_match_embedding(pattern, 0.8);
+```
+
+#### Neural-Symbolic Inference
+```cpp
+TensorLogic logic(atomspace);
+
+// Combine embeddings with PLN
+Handle conclusion = space.tensor_deduction(premise1, premise2);
+
+// Attention-guided pattern matching
+HandleSeq results = logic.attention_query(pattern, 100);
+```
 
 ## Common Pitfalls
 

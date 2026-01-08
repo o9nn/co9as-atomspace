@@ -1503,3 +1503,22 @@ TENSOR_MEAN_LINK <- TENSOR_OP_LINK     // Mean of all elements
 // Tensor value access and storage
 TENSOR_OF_LINK <- TENSOR_OP_LINK       // Get tensor from atom
 SET_TENSOR_LINK <- TENSOR_OP_LINK      // Attach tensor to atom
+
+// ==============================================================
+// Tensor Logic for Multi-Entity & Multi-Scale Network-Aware Operations
+//
+// Based on o9nn/ATen and o9nn/ATenSpace integration patterns.
+// These types enable hybrid symbolic-neural AI architectures.
+
+// Base class for tensor logic operation links
+TENSOR_LOGIC_LINK <- EXECUTABLE_LINK
+
+// Entity embedding operations
+EMBEDDING_OF_LINK <- TENSOR_LOGIC_LINK    // Get embedding from atom
+SET_EMBEDDING_LINK <- TENSOR_LOGIC_LINK   // Set embedding on atom
+
+// Similarity and query operations
+SIMILARITY_QUERY_LINK <- TENSOR_LOGIC_LINK  // Find similar atoms by embedding
+
+// Hebbian learning link (ECAN-style)
+HEBBIAN_LINK <- ORDERED_LINK              // Weighted connection with Hebbian learning
