@@ -1463,3 +1463,62 @@ EQUIVALENCE_LINK <- UNORDERED_LINK
 
 // Undocumented mystery link. Used in unit tests.
 EXECUTION_LINK <- ORDERED_LINK
+
+// ==============================================================
+// ATen Tensor Integration
+//
+// These types provide integration with PyTorch's ATen tensor library,
+// enabling tensor operations within the AtomSpace framework.
+
+// ATen tensor value. Wraps a PyTorch tensor as an OpenCog Value.
+// When ATen is not available, falls back to a vector-based implementation.
+ATEN_VALUE <- VALUE,FLOAT_VEC_ARG
+
+// Base class for tensor operation links
+TENSOR_OP_LINK <- EXECUTABLE_LINK
+
+// Element-wise tensor operations
+TENSOR_ADD_LINK <- TENSOR_OP_LINK      // Element-wise addition
+TENSOR_SUB_LINK <- TENSOR_OP_LINK      // Element-wise subtraction
+TENSOR_MUL_LINK <- TENSOR_OP_LINK      // Element-wise multiplication
+TENSOR_DIV_LINK <- TENSOR_OP_LINK      // Element-wise division
+
+// Matrix operations
+TENSOR_MATMUL_LINK <- TENSOR_OP_LINK   // Matrix multiplication
+TENSOR_TRANSPOSE_LINK <- TENSOR_OP_LINK // Transpose dimensions
+
+// Shape operations
+TENSOR_RESHAPE_LINK <- TENSOR_OP_LINK  // Reshape tensor
+
+// Activation functions
+TENSOR_RELU_LINK <- TENSOR_OP_LINK     // ReLU activation
+TENSOR_SIGMOID_LINK <- TENSOR_OP_LINK  // Sigmoid activation
+TENSOR_TANH_LINK <- TENSOR_OP_LINK     // Tanh activation
+TENSOR_SOFTMAX_LINK <- TENSOR_OP_LINK  // Softmax activation
+
+// Reduction operations
+TENSOR_SUM_LINK <- TENSOR_OP_LINK      // Sum all elements
+TENSOR_MEAN_LINK <- TENSOR_OP_LINK     // Mean of all elements
+
+// Tensor value access and storage
+TENSOR_OF_LINK <- TENSOR_OP_LINK       // Get tensor from atom
+SET_TENSOR_LINK <- TENSOR_OP_LINK      // Attach tensor to atom
+
+// ==============================================================
+// Tensor Logic for Multi-Entity & Multi-Scale Network-Aware Operations
+//
+// Based on o9nn/ATen and o9nn/ATenSpace integration patterns.
+// These types enable hybrid symbolic-neural AI architectures.
+
+// Base class for tensor logic operation links
+TENSOR_LOGIC_LINK <- EXECUTABLE_LINK
+
+// Entity embedding operations
+EMBEDDING_OF_LINK <- TENSOR_LOGIC_LINK    // Get embedding from atom
+SET_EMBEDDING_LINK <- TENSOR_LOGIC_LINK   // Set embedding on atom
+
+// Similarity and query operations
+SIMILARITY_QUERY_LINK <- TENSOR_LOGIC_LINK  // Find similar atoms by embedding
+
+// Hebbian learning link (ECAN-style)
+HEBBIAN_LINK <- ORDERED_LINK              // Weighted connection with Hebbian learning
